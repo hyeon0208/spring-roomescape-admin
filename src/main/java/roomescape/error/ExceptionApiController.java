@@ -31,12 +31,6 @@ public class ExceptionApiController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ErrorResult requestFormatExHandler(final HttpMessageNotReadableException exception) {
-        return new ErrorResult("BAD_INPUT", exception.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(NullPointerException.class)
     public ErrorResult nullExHandler(final NullPointerException exception) {
         return new ErrorResult("NOT_NULL", exception.getMessage());
