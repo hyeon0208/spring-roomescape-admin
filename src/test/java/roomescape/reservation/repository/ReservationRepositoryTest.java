@@ -15,29 +15,28 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import roomescape.reservation.domain.Name;
 import roomescape.reservation.domain.Reservation;
-import roomescape.time.domain.Time;
-import roomescape.time.repository.TimeRepository;
+import roomescape.reservation.domain.ReservationTime;
 
 @DisplayName("예약 레포지토리")
 @JdbcTest
-@Import({ReservationRepository.class, TimeRepository.class})
+@Import({ReservationRepository.class, ReservationTimeRepository.class})
 class ReservationRepositoryTest {
     @Autowired
     private ReservationRepository reservationRepository;
 
     @Autowired
-    private TimeRepository timeRepository;
+    private ReservationTimeRepository reservationTimeRepository;
 
     private Reservation savedReservation;
 
     @BeforeEach
     void init() {
-        Time savedTime = timeRepository.save(new Time(null, LocalTime.parse("10:00")));
+        ReservationTime savedReservationTime = reservationTimeRepository.save(new ReservationTime(null, LocalTime.parse("10:00")));
 
         Reservation reservation = new Reservation(
                 null,
                 new Name("브라운"), LocalDate.parse("2024-08-05"),
-                new Time(savedTime.getId(), savedTime.getStartAt())
+                new ReservationTime(savedReservationTime.getId(), savedReservationTime.getStartAt())
         );
         savedReservation = reservationRepository.save(reservation);
     }

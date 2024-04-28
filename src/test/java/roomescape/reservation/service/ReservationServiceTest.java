@@ -13,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import roomescape.reservation.dto.ReservationSaveRequest;
 import roomescape.reservation.repository.ReservationRepository;
-import roomescape.time.repository.TimeRepository;
+import roomescape.reservation.repository.ReservationTimeRepository;
 
 @DisplayName("예약 서비스")
 @ExtendWith(MockitoExtension.class)
@@ -22,7 +22,7 @@ public class ReservationServiceTest {
     private ReservationRepository reservationRepository;
 
     @Mock
-    private TimeRepository timeRepository;
+    private ReservationTimeRepository reservationTimeRepository;
 
     @InjectMocks
     private ReservationService reservationService;
@@ -51,7 +51,7 @@ public class ReservationServiceTest {
                 timeId
         );
 
-        doReturn(Optional.empty()).when(timeRepository)
+        doReturn(Optional.empty()).when(reservationTimeRepository)
                 .findById(timeId);
 
         // when & then

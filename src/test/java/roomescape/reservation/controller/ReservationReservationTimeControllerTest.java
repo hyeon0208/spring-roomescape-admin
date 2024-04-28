@@ -1,4 +1,4 @@
-package roomescape.time.controller;
+package roomescape.reservation.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -9,10 +9,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
+import roomescape.reservation.controller.ReservationTimeController;
 
 @DisplayName("시간 view 컨트롤러")
-@WebMvcTest(TimeController.class)
-class TimeControllerTest {
+@WebMvcTest(ReservationTimeController.class)
+class ReservationReservationTimeControllerTest {
     @Autowired
     private MockMvc mockMvc;
 

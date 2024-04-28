@@ -1,26 +1,26 @@
-package roomescape.time.dto;
+package roomescape.reservation.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalTime;
 import java.util.Objects;
-import roomescape.time.domain.Time;
+import roomescape.reservation.domain.ReservationTime;
 
-public class TimeResponse {
+public class ReservationTimeResponse {
     private Long id;
 
     @JsonFormat(pattern = "HH:mm")
     private LocalTime startAt;
 
-    public TimeResponse() {
+    public ReservationTimeResponse() {
     }
 
-    public TimeResponse(final Long id, final LocalTime startAt) {
+    public ReservationTimeResponse(final Long id, final LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;
     }
 
-    public static TimeResponse toResponse(final Time time) {
-        return new TimeResponse(time.getId(), time.getStartAt());
+    public static ReservationTimeResponse toResponse(final ReservationTime reservationTime) {
+        return new ReservationTimeResponse(reservationTime.getId(), reservationTime.getStartAt());
     }
 
     public Long getId() {
@@ -39,8 +39,8 @@ public class TimeResponse {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        TimeResponse timeResponse = (TimeResponse) o;
-        return Objects.equals(id, timeResponse.id) && Objects.equals(startAt, timeResponse.startAt);
+        ReservationTimeResponse reservationTimeResponse = (ReservationTimeResponse) o;
+        return Objects.equals(id, reservationTimeResponse.id) && Objects.equals(startAt, reservationTimeResponse.startAt);
     }
 
     @Override

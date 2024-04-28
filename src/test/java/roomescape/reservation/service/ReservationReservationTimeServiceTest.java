@@ -1,4 +1,4 @@
-package roomescape.time.service;
+package roomescape.reservation.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doReturn;
@@ -12,17 +12,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import roomescape.error.ReferDataDeleteException;
-import roomescape.time.domain.Time;
-import roomescape.time.repository.TimeRepository;
+import roomescape.reservation.domain.ReservationTime;
+import roomescape.reservation.repository.ReservationTimeRepository;
+import roomescape.reservation.service.ReservationTimeService;
 
 @DisplayName("시간 서비스")
 @ExtendWith(MockitoExtension.class)
-class TimeServiceTest {
+class ReservationReservationTimeServiceTest {
     @Mock
-    private TimeRepository timeRepository;
+    private ReservationTimeRepository reservationTimeRepository;
 
     @InjectMocks
-    private TimeService timeService;
+    private ReservationTimeService reservationTimeService;
 
     @DisplayName("존재하지 않는 id일 경우 예외가 발생한다.")
     @Test
@@ -30,11 +31,11 @@ class TimeServiceTest {
         // given
         Long id = 1L;
 
-        doReturn(Optional.empty()).when(timeRepository)
+        doReturn(Optional.empty()).when(reservationTimeRepository)
                 .findById(id);
 
         // when & then
-        assertThatThrownBy(() -> timeService.findById(id))
+        assertThatThrownBy(() -> reservationTimeService.findById(id))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -43,16 +44,16 @@ class TimeServiceTest {
     void deleteByIdExceptionTest() {
         // given
         Long id = 1L;
-        Time time = new Time(id, LocalTime.parse("10:00"));
+        ReservationTime reservationTime = new ReservationTime(id, LocalTime.parse("10:00"));
 
-        doReturn(Optional.of(time)).when(timeRepository)
+        doReturn(Optional.of(reservationTime)).when(reservationTimeRepository)
                 .findById(id);
 
-        doReturn(Optional.of(time)).when(timeRepository)
+        doReturn(Optional.of(reservationTime)).when(reservationTimeRepository)
                 .findBySameReferId(id);
 
         // when & then
-        assertThatThrownBy(() -> timeService.deleteById(id))
+        assertThatThrownBy(() -> reservationTimeService.deleteById(id))
                 .isInstanceOf(ReferDataDeleteException.class);
     }
 }

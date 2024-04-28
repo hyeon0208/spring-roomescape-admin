@@ -1,4 +1,4 @@
-package roomescape.time.controller;
+package roomescape.reservation.controller;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
@@ -22,36 +22,37 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import roomescape.time.domain.Time;
-import roomescape.time.dto.TimeResponse;
-import roomescape.time.dto.TimeSaveRequest;
-import roomescape.time.service.TimeService;
+import roomescape.reservation.controller.ReservationTimeApiController;
+import roomescape.reservation.domain.ReservationTime;
+import roomescape.reservation.dto.ReservationTimeResponse;
+import roomescape.reservation.dto.ReservationTimeSaveRequest;
+import roomescape.reservation.service.ReservationTimeService;
 
 @DisplayName("시간 API 컨트롤러")
-@WebMvcTest(TimeApiController.class)
-class TimeApiControllerTest {
+@WebMvcTest(ReservationTimeApiController.class)
+class ReservationReservationTimeApiControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private TimeService timeService;
+    private ReservationTimeService reservationTimeService;
 
     @DisplayName("모든 시간 조회 성공 시 200 응답을 받는다.")
     @Test
     public void findAllTest() throws Exception {
         // given
-        Time time1 = new Time(1L, LocalTime.parse("10:00"));
-        Time time2 = new Time(2L, LocalTime.parse("10:00"));
-        List<Time> times = List.of(time1, time2);
+        ReservationTime reservationTime1 = new ReservationTime(1L, LocalTime.parse("10:00"));
+        ReservationTime reservationTime2 = new ReservationTime(2L, LocalTime.parse("10:00"));
+        List<ReservationTime> reservationTimes = List.of(reservationTime1, reservationTime2);
 
         // when
-        doReturn(times).when(timeService).findAll();
+        doReturn(reservationTimes).when(reservationTimeService).findAll();
 
         // then
         mockMvc.perform(get("/times")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(times.size())));
+                .andExpect(jsonPath("$", hasSize(reservationTimes.size())));
     }
 
     @DisplayName("시간 저장 테스트")
@@ -64,17 +65,17 @@ class TimeApiControllerTest {
         @Test
         public void createSuccessTest() throws Exception {
             // given
-            TimeSaveRequest timeSaveRequest = new TimeSaveRequest(LocalTime.parse("10:00"));
-            TimeResponse time = new TimeResponse(1L, timeSaveRequest.getStartAt());
+            ReservationTimeSaveRequest reservationTimeSaveRequest = new ReservationTimeSaveRequest(LocalTime.parse("10:00"));
+            ReservationTimeResponse time = new ReservationTimeResponse(1L, reservationTimeSaveRequest.getStartAt());
 
             // when
-            doReturn(time).when(timeService)
-                    .save(any(TimeSaveRequest.class));
+            doReturn(time).when(reservationTimeService)
+                    .save(any(ReservationTimeSaveRequest.class));
 
             // then
             mockMvc.perform(post("/times")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(timeSaveRequest)))
+                            .content(objectMapper.writeValueAsString(reservationTimeSaveRequest)))
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.id").value(time.getId()))
                     .andExpect(jsonPath("$.startAt").value(time.getStartAt().toString()));
@@ -84,16 +85,16 @@ class TimeApiControllerTest {
         @Test
         public void createExceptionTest() throws Exception {
             // given
-            TimeSaveRequest timeSaveRequest = new TimeSaveRequest(null);
+            ReservationTimeSaveRequest reservationTimeSaveRequest = new ReservationTimeSaveRequest(null);
 
             // when
-            doThrow(new DataAccessException("데이터 접근 예외") {}).when(timeService)
-                    .save(any(TimeSaveRequest.class));
+            doThrow(new DataAccessException("데이터 접근 예외") {}).when(reservationTimeService)
+                    .save(any(ReservationTimeSaveRequest.class));
 
             // then
             mockMvc.perform(post("/times")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(timeSaveRequest)))
+                            .content(objectMapper.writeValueAsString(reservationTimeSaveRequest)))
                     .andExpect(status().isBadRequest());
         }
     }
@@ -106,7 +107,7 @@ class TimeApiControllerTest {
         @Test
         public void deleteByIdSuccessTest() throws Exception {
             // given && when
-            doThrow(IllegalArgumentException.class).when(timeService)
+            doThrow(IllegalArgumentException.class).when(reservationTimeService)
                     .deleteById(2L);
 
             // then
@@ -122,7 +123,7 @@ class TimeApiControllerTest {
             Long id = 1L;
 
             // when
-            doThrow(IllegalArgumentException.class).when(timeService)
+            doThrow(IllegalArgumentException.class).when(reservationTimeService)
                     .deleteById(id);
 
             // then

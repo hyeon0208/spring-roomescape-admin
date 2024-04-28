@@ -6,24 +6,24 @@ import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.dto.ReservationSaveRequest;
 import roomescape.reservation.repository.ReservationRepository;
-import roomescape.time.domain.Time;
-import roomescape.time.repository.TimeRepository;
+import roomescape.reservation.domain.ReservationTime;
+import roomescape.reservation.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationService {
     private final ReservationRepository reservationRepository;
-    private final TimeRepository timeRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(final ReservationRepository reservationRepository, final TimeRepository timeRepository) {
+    public ReservationService(final ReservationRepository reservationRepository, final ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
-        this.timeRepository = timeRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public ReservationResponse save(final ReservationSaveRequest reservationSaveRequest) {
-        Time time = timeRepository.findById(reservationSaveRequest.getTimeId())
+        ReservationTime reservationTime = reservationTimeRepository.findById(reservationSaveRequest.getTimeId())
                 .orElseThrow(() -> new IllegalArgumentException("일치하는 시간이 없습니다."));
 
-        Reservation reservation = reservationRepository.save(reservationSaveRequest.toReservation(time));
+        Reservation reservation = reservationRepository.save(reservationSaveRequest.toReservation(reservationTime));
         return ReservationResponse.toResponse(reservation);
     }
 

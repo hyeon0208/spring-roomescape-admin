@@ -13,7 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Name;
 import roomescape.reservation.domain.Reservation;
-import roomescape.time.domain.Time;
+import roomescape.reservation.domain.ReservationTime;
 
 @Repository
 public class ReservationRepository {
@@ -26,7 +26,7 @@ public class ReservationRepository {
     public Reservation save(final Reservation reservation) {
         String name = reservation.getName();
         LocalDate date = reservation.getDate();
-        Time time = reservation.getTime();
+        ReservationTime reservationTime = reservation.getTime();
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -34,12 +34,12 @@ public class ReservationRepository {
                     "insert into reservation(name, date, time_id) values (?, ? ,?)", new String[]{"id"});
             ps.setString(1, name);
             ps.setString(2, date.toString());
-            ps.setLong(3, time.getId());
+            ps.setLong(3, reservationTime.getId());
             return ps;
         }, keyHolder);
         long reservationId = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
-        return new Reservation(reservationId, new Name(name), date, time);
+        return new Reservation(reservationId, new Name(name), date, reservationTime);
     }
 
     public Optional<Reservation> findById(final Long id) {
@@ -81,7 +81,7 @@ public class ReservationRepository {
                         resultSet.getLong("id"),
                         new Name(resultSet.getString("name")),
                         resultSet.getDate("date").toLocalDate(),
-                        new Time(
+                        new ReservationTime(
                                 resultSet.getLong("time_id"),
                                 resultSet.getTime("start_at").toLocalTime()
                         )

@@ -1,4 +1,4 @@
-package roomescape.time.repository;
+package roomescape.reservation.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -16,39 +16,40 @@ import org.springframework.context.annotation.Import;
 import roomescape.reservation.domain.Name;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.repository.ReservationRepository;
-import roomescape.time.domain.Time;
+import roomescape.reservation.domain.ReservationTime;
+import roomescape.reservation.repository.ReservationTimeRepository;
 
 @DisplayName("시간 레포지토리")
 @JdbcTest
-@Import({TimeRepository.class, ReservationRepository.class})
-class TimeRepositoryTest {
+@Import({ReservationTimeRepository.class, ReservationRepository.class})
+class ReservationReservationTimeRepositoryTest {
     @Autowired
-    private TimeRepository timeRepository;
+    private ReservationTimeRepository reservationTimeRepository;
 
     @Autowired
     private ReservationRepository reservationRepository;
 
-    private Time savedTime;
+    private ReservationTime savedReservationTime;
 
     @BeforeEach
     void init() {
-        Time time = new Time(null, LocalTime.parse("10:00"));
-        savedTime = timeRepository.save(time);
+        ReservationTime reservationTime = new ReservationTime(null, LocalTime.parse("10:00"));
+        savedReservationTime = reservationTimeRepository.save(reservationTime);
     }
 
     @DisplayName("id로 시간 정보를 조회한다.")
     @Test
     void findById() {
         // given
-        Optional<Time> findTime = timeRepository.findById(savedTime.getId());
+        Optional<ReservationTime> findTime = reservationTimeRepository.findById(savedReservationTime.getId());
 
         // when
-        Time time = findTime.get();
+        ReservationTime reservationTime = findTime.get();
 
         // then
         assertAll(
-                () -> assertThat(savedTime.getId()).isEqualTo(time.getId()),
-                () -> assertThat(savedTime.getStartAt()).isEqualTo(time.getStartAt())
+                () -> assertThat(savedReservationTime.getId()).isEqualTo(reservationTime.getId()),
+                () -> assertThat(savedReservationTime.getStartAt()).isEqualTo(reservationTime.getStartAt())
         );
     }
 
@@ -56,7 +57,7 @@ class TimeRepositoryTest {
     @Test
     void findAll() {
         // given & when
-        List<Time> reservations = timeRepository.findAll();
+        List<ReservationTime> reservations = reservationTimeRepository.findAll();
 
         // then
         assertThat(reservations).hasSize(1);
@@ -69,15 +70,15 @@ class TimeRepositoryTest {
         Reservation reservation = new Reservation(
                 null,
                 new Name("브라운"), LocalDate.parse("2024-08-05"),
-                new Time(savedTime.getId(), LocalTime.parse("10:00"))
+                new ReservationTime(savedReservationTime.getId(), LocalTime.parse("10:00"))
         );
         reservationRepository.save(reservation);
 
-        Time savedTime2 = timeRepository.save(new Time(null, LocalTime.parse("11:00")));
+        ReservationTime savedReservationTime2 = reservationTimeRepository.save(new ReservationTime(null, LocalTime.parse("11:00")));
 
         // when
-        Optional<Time> time1 = timeRepository.findBySameReferId(savedTime.getId());
-        Optional<Time> time2 = timeRepository.findBySameReferId(savedTime2.getId());
+        Optional<ReservationTime> time1 = reservationTimeRepository.findBySameReferId(savedReservationTime.getId());
+        Optional<ReservationTime> time2 = reservationTimeRepository.findBySameReferId(savedReservationTime2.getId());
 
         // then
         assertAll(
@@ -90,9 +91,9 @@ class TimeRepositoryTest {
     @Test
     void delete() {
         // given & when
-        timeRepository.deleteById(savedTime.getId());
+        reservationTimeRepository.deleteById(savedReservationTime.getId());
 
         // then
-        assertThat(timeRepository.findById(savedTime.getId()).isEmpty()).isTrue();
+        assertThat(reservationTimeRepository.findById(savedReservationTime.getId()).isEmpty()).isTrue();
     }
 }

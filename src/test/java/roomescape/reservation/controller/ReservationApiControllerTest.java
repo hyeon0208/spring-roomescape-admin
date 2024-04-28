@@ -29,8 +29,8 @@ import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.dto.ReservationSaveRequest;
 import roomescape.reservation.service.ReservationService;
-import roomescape.time.domain.Time;
-import roomescape.time.dto.TimeResponse;
+import roomescape.reservation.domain.ReservationTime;
+import roomescape.reservation.dto.ReservationTimeResponse;
 
 @DisplayName("예약 API 컨트롤러")
 @WebMvcTest(ReservationApiController.class)
@@ -45,9 +45,9 @@ class ReservationApiControllerTest {
     @Test
     public void findAllTest() throws Exception {
         // given
-        Time time = new Time(1L, LocalTime.parse("10:00"));
-        Reservation reservation1 = new Reservation(1L, new Name("브라운"), LocalDate.parse("2024-08-05"), time);
-        Reservation reservation2 = new Reservation(2L, new Name("솔라"), LocalDate.parse("2024-08-05"), time);
+        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.parse("10:00"));
+        Reservation reservation1 = new Reservation(1L, new Name("브라운"), LocalDate.parse("2024-08-05"), reservationTime);
+        Reservation reservation2 = new Reservation(2L, new Name("솔라"), LocalDate.parse("2024-08-05"), reservationTime);
         List<Reservation> reservations = List.of(reservation1, reservation2);
 
         // when
@@ -70,7 +70,7 @@ class ReservationApiControllerTest {
         @Test
         public void createSuccessTest() throws Exception {
             // given
-            TimeResponse time = new TimeResponse(5L, LocalTime.parse("10:00"));
+            ReservationTimeResponse time = new ReservationTimeResponse(5L, LocalTime.parse("10:00"));
             ReservationSaveRequest reservationSaveRequest = new ReservationSaveRequest("브라운",
                     LocalDate.parse("2024-08-05"), time.getId());
             ReservationResponse reservation = new ReservationResponse(1L, reservationSaveRequest.getName(),

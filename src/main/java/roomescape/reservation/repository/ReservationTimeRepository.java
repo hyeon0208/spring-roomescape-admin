@@ -1,4 +1,4 @@
-package roomescape.time.repository;
+package roomescape.reservation.repository;
 
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
@@ -11,18 +11,18 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.time.domain.Time;
+import roomescape.reservation.domain.ReservationTime;
 
 @Repository
-public class TimeRepository {
+public class ReservationTimeRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public TimeRepository(final JdbcTemplate jdbcTemplate) {
+    public ReservationTimeRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Time save(final Time time) {
-        LocalTime startAt = time.getStartAt();
+    public ReservationTime save(final ReservationTime reservationTime) {
+        LocalTime startAt = reservationTime.getStartAt();
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -33,10 +33,10 @@ public class TimeRepository {
         }, keyHolder);
         long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
-        return new Time(id, startAt);
+        return new ReservationTime(id, startAt);
     }
 
-    public Optional<Time> findById(final Long id) {
+    public Optional<ReservationTime> findById(final Long id) {
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject("select * from reservation_time where id = ?",
                     createTimeRowMapper(), id));
@@ -45,7 +45,7 @@ public class TimeRepository {
         }
     }
 
-    public Optional<Time> findBySameReferId(final Long id) {
+    public Optional<ReservationTime> findBySameReferId(final Long id) {
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject("""
                     select t.id, t.start_at from reservation_time t
@@ -58,12 +58,12 @@ public class TimeRepository {
         }
     }
 
-    public List<Time> findAll() {
+    public List<ReservationTime> findAll() {
         return jdbcTemplate.query("select * from reservation_time", createTimeRowMapper());
     }
 
-    private RowMapper<Time> createTimeRowMapper() {
-        return (resultSet, rowNum) -> new Time(
+    private RowMapper<ReservationTime> createTimeRowMapper() {
+        return (resultSet, rowNum) -> new ReservationTime(
                 resultSet.getLong("id"),
                 resultSet.getTime("start_at").toLocalTime()
         );
